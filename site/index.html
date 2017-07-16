@@ -1,0 +1,55 @@
+<html>
+
+<head>
+    <!--
+    This is the library that provides websocket streaming pub/sub
+    The dev serverver is serving the html and javascript, but it also provides updating fx data on /fx/prices.
+     -->
+    <script src="stomp.js"></script>
+    <script src="sparkline.js"></script>
+    <!--
+    This will update the grid based on the data 
+    This is view which renders the data which it receives from bidPriceUpdates model which is described below
+     -->
+    <script src="bidPriceUpdates.js"></script>
+    <!--
+    This will consume data from /fx/prices
+    This is the model which consumes data from /fx/prices 
+     -->
+    <script src="bidDataConsumer.js"></script>
+</head>
+
+<body>
+
+    <!-- Table where bidPriceData Will be rendered --> 
+    <h2 align="center">Realtime Bid Updates</h2>
+    <table id="bidUpdates">
+        <tr>
+            <th>Name</th>
+            <th>BestBid</th>
+            <th>BestAsk</th>
+            <th>OpenBid</th>
+            <th>OpenAsk</th>
+            <th>LastChangeAsk</th>
+            <th>LastChangeBid</th>
+            <th>SparkLine</th>
+        </tr>
+    </table>
+
+    <!-- Display stomp server status --> 
+    <h2 align="center">Stomp Server Status</h2>
+
+    <div class="onoffswitch">
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked disabled="">
+    <label class="onoffswitch-label" for="myonoffswitch">
+        <span class="onoffswitch-inner"></span>
+        <span class="onoffswitch-switch"></span>
+    </label>
+</div>
+
+    <!-- Code you write in index.js and anything it depends on will be bundled into bundle.js and
+     is included here -->
+    <script src="bundle.js"></script>
+</body>
+
+</html>
