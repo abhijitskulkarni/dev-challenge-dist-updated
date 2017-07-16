@@ -18,7 +18,7 @@ navigate to http://localhost:8011/ you should see table with data updates.
 
 ### Run unit test
 - One test case is written to check if sorting function is working properly or not.
-  Sorting is done is descending order.
+  Sorting is done is ascending order.
 
 To Run the tests. Follow below commands 
 ```sh
@@ -33,5 +33,5 @@ $ npm test
 ### Notes
 - Store latest 20 bidupdates in the array because data will keep on increasing which      may cause browser to freeze up
 - To Draw sparkLine last 10 elements are used so that UI wont be disturbed
-- Data is sorted in Descending order of lastChangeBid column
+- Data is sorted in ascending order of lastChangeBid column
 - For initial 30 seconds you wont see any sparkline. 
