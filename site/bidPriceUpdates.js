@@ -2,35 +2,37 @@
 
 // There will be continuos data for bidUpdates
 // This array will store latest 20 bidupdates because data will keep on increasing
-// which may cause browser to freeze up  
+// which may cause browser to freeze up
 let bidUpdatesData = [];
 
-/**
- * Add Price data in Table
- * @param {Object}  priceResult
- */
-function addValuesToTable(priceResult) {
+function bidPriceUpdate() {
 
-  // Following is table where bidData will be rendered
-  let table = document.getElementById("bidUpdates");
+  /**
+   * Add Price data in Table
+   * @param {Object}  priceResult
+   */
+  this.addValuesToTable = function(priceResult) {
 
-  let parsedPrice = JSON.parse(priceResult.body);
+    // Following is table where bidData will be rendered
+    let table = document.getElementById("bidUpdates");
 
-  // get the index number of object in array
-  let indexNumber = isElementPresent(parsedPrice.name);
+    let parsedPrice = JSON.parse(priceResult.body);
 
-  // if element is already present in the array
-  if (indexNumber >= 0) {
-    bidUpdatesData[indexNumber] = parsedPrice;
-  }
-  // if element is not present in the array then push it into array
-  else {
-    bidUpdatesData.push(parsedPrice);
-  }
+    // get the index number of object in array
+    let indexNumber = isElementPresent(parsedPrice.name);
 
-  // Call sort function to sort bidPriceData
-  // Data will be sorted in ascending order based on value of lastChangeBid
-  bidUpdatesData.sort(sortBestBidPrice);
+    // if element is already present in the array
+    if (indexNumber >= 0) {
+      bidUpdatesData[indexNumber] = parsedPrice;
+    }
+    // if element is not present in the array then push it into array
+    else {
+      bidUpdatesData.push(parsedPrice);
+    }
+
+    // Call sort function to sort bidPriceData
+    // Data will be sorted in ascending order based on value of lastChangeBid
+    bidUpdatesData.sort(sortBestBidPrice);
 
     // Render all the bidUpdates in table
     bidUpdatesData.forEach(function(priceObjectBody, index) {
@@ -38,7 +40,7 @@ function addValuesToTable(priceResult) {
       // This will be used for drawing sparkline
       const sparks = document.createElement('span');
 
-      // Create row dynamically 
+      // Create row dynamically
       let table = document.getElementById("bidUpdates");
       let row = table.insertRow(1);
       let cell0 = row.insertCell(0);
@@ -64,12 +66,20 @@ function addValuesToTable(priceResult) {
       Sparkline.draw(sparks, priceObjectBody.sparkArray);
 
       let lengthOfRows = table.rows.length;
-      // delete last row of table 
+      // delete last row of table
       if (lengthOfRows > 13) {
         table.deleteRow(lengthOfRows - 1);
       }
     });
 
+  }
+
+  /**
+   * Change status of stomp server
+   */
+  this.shutDownServer = function() {
+    document.getElementById("myonoffswitch").checked = false;
+  }
 }
 
 /**
@@ -77,15 +87,15 @@ function addValuesToTable(priceResult) {
  * @param {Object}  bidPriceArray
  * @return {Object} Sorted array will be returned
  */
-function sortBestBidPrice(a,b) {
+function sortBestBidPrice(a, b) {
 
   return b.lastChangeBid - a.lastChangeBid;
 }
 
 /**
  * Check if element exists in the Array
- * @param {object}  arrayObject
- * @return {Number} Index
+ * @param {string}  name of the currency
+ * @return {Number} Index of currency.
  */
 function isElementPresent(name) {
 
@@ -99,14 +109,6 @@ function isElementPresent(name) {
 
   return Index;
 }
-
-/**
- * Change status of stomp server
- */
-function serverIsOff() {
-  document.getElementById("myonoffswitch").checked = false;
-}
-
 // This is required for unit test.
 exports._test = {
   sortBestBidPrice: sortBestBidPrice
