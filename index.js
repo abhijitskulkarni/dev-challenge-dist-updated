@@ -27,6 +27,3 @@ function connectCallback() {
 client.connect({}, connectCallback, function(error) {
   alert(error.headers.message)
 })
-
-const exampleSparkline = document.getElementById('example-sparkline')
-Sparkline.draw(exampleSparkline, [1, 2, 3, 6, 8, 20, 2, 2, 4, 2, 3])

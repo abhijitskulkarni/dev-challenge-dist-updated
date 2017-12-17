@@ -99,7 +99,7 @@ function sortBestBidPrice(a, b) {
  */
 function isElementPresent(name) {
 
-  let Index;
+  let Index = -1; // If element is not found return -1
   for (let i = 0; i < bidUpdatesData.length; i++) {
     if (bidUpdatesData[i].name == name) {
       Index = i;
