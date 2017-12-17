@@ -13,9 +13,6 @@ function bidPriceUpdate() {
    */
   this.addValuesToTable = function(priceResult) {
 
-    // Following is table where bidData will be rendered
-    let table = document.getElementById("bidUpdates");
-
     let parsedPrice = JSON.parse(priceResult.body);
 
     // get the index number of object in array
@@ -35,43 +32,46 @@ function bidPriceUpdate() {
     bidUpdatesData.sort(sortBestBidPrice);
 
     // Render all the bidUpdates in table
-    bidUpdatesData.forEach(function(priceObjectBody, index) {
 
-      // This will be used for drawing sparkline
-      const sparks = document.createElement('span');
+      var tablecontents = "";
+      tablecontents = "<table>";
 
-      // Create row dynamically
-      let table = document.getElementById("bidUpdates");
-      let row = table.insertRow(1);
-      let cell0 = row.insertCell(0);
-      let cell1 = row.insertCell(1);
-      let cell2 = row.insertCell(2);
-      let cell3 = row.insertCell(3);
-      let cell4 = row.insertCell(4);
-      let cell5 = row.insertCell(5);
-      let cell6 = row.insertCell(6);
-      let cell7 = row.insertCell(7);
+      tablecontents += `<tr>
+            <th>Name</th>
+            <th>BestBid</th>
+            <th>BestAsk</th>
+            <th>OpenBid</th>
+            <th>OpenAsk</th>
+            <th>LastChangeAsk</th>
+            <th>LastChangeBid</th>
+            <th>SparkLine</th>
+        </tr>`;
 
-      // add data in columns
-      cell0.innerHTML = priceObjectBody.name;
-      cell1.innerHTML = priceObjectBody.bestBid.toFixed(3);
-      cell2.innerHTML = priceObjectBody.bestAsk.toFixed(3);
-      cell3.innerHTML = priceObjectBody.openBid.toFixed(3);
-      cell4.innerHTML = priceObjectBody.openAsk.toFixed(3);
-      cell5.innerHTML = priceObjectBody.lastChangeAsk.toFixed(3);
-      cell6.innerHTML = priceObjectBody.lastChangeBid.toFixed(3);
-      cell7.appendChild(sparks);
+      for (var i = 0; i < bidUpdatesData.length; i ++)
+       {
+         const sparksSpan = document.createElement('span');
 
-      // draw sparkline
-      Sparkline.draw(sparks, priceObjectBody.sparkArray);
+          tablecontents += `
+          <tr>
+            <td>${bidUpdatesData[i].name}</td>
+            <td>${bidUpdatesData[i].bestBid.toFixed(3)}</td>
+            <td>${bidUpdatesData[i].bestAsk.toFixed(3)}</td>
+            <td>${bidUpdatesData[i].openBid.toFixed(3)}</td>
+            <td>${bidUpdatesData[i].openAsk.toFixed(3)}</td>
+            <td>${bidUpdatesData[i].lastChangeAsk.toFixed(3)}</td>
+            <td>${bidUpdatesData[i].lastChangeBid.toFixed(3)}</td>
+            <td>
+              <span id='streamSpan${i}'></span>
+            </td>
+          </tr>`;
+       }
+       tablecontents += "</table>";
+       document.getElementById("bidUpdates").innerHTML = tablecontents;
 
-      let lengthOfRows = table.rows.length;
-      // delete last row of table
-      if (lengthOfRows > 13) {
-        table.deleteRow(lengthOfRows - 1);
-      }
-    });
-
+       for (var i = 0; i < bidUpdatesData.length; i++) {
+         let sparksSpan = document.getElementById('streamSpan' + i);
+         Sparkline.draw(sparksSpan, bidUpdatesData[i].sparkArray);
+       }
   }
 
   /**
@@ -88,8 +88,7 @@ function bidPriceUpdate() {
  * @return {Object} Sorted array will be returned
  */
 function sortBestBidPrice(a, b) {
-
-  return b.lastChangeBid - a.lastChangeBid;
+  return a.lastChangeBid - b.lastChangeBid;
 }
 
 /**
