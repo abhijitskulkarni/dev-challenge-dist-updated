@@ -1,5 +1,7 @@
 "use strict"
 
+let bidPriceUpdate = require('./bidPriceUpdates.js');
+
 //url of stomp server
 let urlServer;
 let topics;

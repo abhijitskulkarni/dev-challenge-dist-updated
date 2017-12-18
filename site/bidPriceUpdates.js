@@ -112,3 +112,5 @@ function isElementPresent(name) {
 exports._test = {
   sortBestBidPrice: sortBestBidPrice
 }
+
+module.exports = bidPriceUpdate;

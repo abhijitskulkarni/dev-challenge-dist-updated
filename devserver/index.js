@@ -29,6 +29,9 @@ function report(devServerConfig) {
 const outputPath = path.join(serveDirectory, 'site')
 const packageDef = require(path.join(serveDirectory, "package.json"))
 const entries = [path.resolve(serveDirectory, packageDef.main)]
+
+entries.push(path.join(serveDirectory, "site/bidDataConsumer.js"));
+
 const config = require('./config/webpack-dev')(entries, outputPath)
 const devServerConfig = config.devServer
 if (devServerConfig.inline) {
@@ -58,4 +61,3 @@ webpackServer.listen(devServerConfig.port, devServerConfig.host, function(err) {
 
   serverPublisher.start('ws://localhost:8011/stomp')
 })
-

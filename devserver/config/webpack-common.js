@@ -41,6 +41,10 @@ module.exports = function(entries, output, includes) {
           loader: 'PackageJson'
         },
         {
+          test: /js$/,
+          loader: 'babel-loader'
+        },
+        {
           test: /\.less$/,
           loader: 'style-loader!css-loader!less-loader'
         },
