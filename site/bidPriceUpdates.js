@@ -5,24 +5,57 @@
 // which may cause browser to freeze up
 let bidUpdatesData = [];
 let sparkLineArray = [];
+var sparkLineCountArray = [];
+let startSparkLine = false;
 
 // create 12 arrays for currencies sparkLine
 for (var i = 0; i <12; i++) {
+  // sparkLineArray[i] = [new Date().getTime()];
+
   sparkLineArray[i] = [];
+  sparkLineCountArray[i] = [];
 }
 
 let counter = 0;
 
 setInterval(function() {
   counter += 1;
+  updateSparkData();
 
-  if (counter > 6) {
-    // for (var i = 0; i < bidUpdatesData.length; i++) {
-    //   let sparksSpan = document.getElementById('streamSpan' + i);
-    //   Sparkline.draw(sparksSpan, sparkLineArray[i]);
-    // }
+},10000);
+
+//update sparkline data for 30 sec
+function updateSparkData() {
+
+  for (var i = 0; i < bidUpdatesData.length; i++) {
+    var sparkLength = sparkLineArray[i].length;
+    var totalSparkValues = 0, sparkValueToAdd = 0;
+
+    if(sparkLineCountArray[i].length > 1){
+          for(var j = 0; j < sparkLineCountArray[i].length; j++){
+          totalSparkValues = totalSparkValues + sparkLineCountArray[i][j];
+          sparkValueToAdd = sparkLength - totalSparkValues;
+          }
+    } else {
+      sparkValueToAdd = sparkLength;
+    }
+    sparkLineCountArray[i].push(sparkValueToAdd);
   }
-},1000);
+
+  if(counter >= 3){
+    // startSparkLine = true;
+drawSparkLine(sparkLineCountArray);
+  }
+
+}
+
+function drawSparkLine(sparkLineCountArray) {
+  for (var i = 0; i < bidUpdatesData.length; i++) {
+    //sparkLineArray[i].splice(0, sparkLineCountArray[i][0]);
+    let sparksSpan = document.getElementById('streamSpan' + i);
+    Sparkline.draw(sparksSpan, sparkLineArray[i]);
+  }
+}
 
 function bidPriceUpdate() {
 
@@ -52,6 +85,10 @@ function bidPriceUpdate() {
     }
     // if element is not present in the array then push it into array
     else {
+      sparkLineArray[bidUpdatesData.length].push(midPrice);
+
+      parsedPrice.sparkArray = sparkLineArray[bidUpdatesData.length];
+
       bidUpdatesData.push(parsedPrice);
     }
 
@@ -95,13 +132,25 @@ function bidPriceUpdate() {
        }
        tablecontents += "</table>";
        document.getElementById("bidUpdates").innerHTML = tablecontents;
+       //
+       // if (startSparkLine) {
+       //   drawSparkLine();
+       // }
 
-       if (counter > 6 ) {
-           for (var i = 0; i < bidUpdatesData.length; i++) {
-             let sparksSpan = document.getElementById('streamSpan' + i);
-             Sparkline.draw(sparksSpan, sparkLineArray[i]);
-         }
-       }
+       // if (counter > 6 ) {
+       //     for (var i = 0; i < bidUpdatesData.length; i++) {
+       //       let sparksSpan = document.getElementById('streamSpan' + i);
+       //       let createdTimeStampSparkLine = sparkLineArray[i] [0];
+       //       let currentTime = new Date().getTime();
+       //       let differenceinSeconds = (currentTime - createdTimeStampSparkLine) /1000;
+       //
+       //       if (differenceinSeconds >= 30) {
+       //         sparkLineArray[i].splice(0,4);
+       //         sparkLineArray[i] [0] = new Date().getTime();
+       //       }
+       //       Sparkline.draw(sparksSpan, sparkLineArray[i].slice(1));
+         // }
+       //}
 
        // for (var i = 0; i < bidUpdatesData.length; i++) {
        //   let sparksSpan = document.getElementById('streamSpan' + i);
