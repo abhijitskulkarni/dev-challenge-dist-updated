@@ -31,8 +31,7 @@ for (let ccy in startPrices) {
     openBid: mid - mid * (spread / 2),
     openAsk: mid + mid * (spread / 2),
     lastChangeAsk: 0,
-    lastChangeBid: 0,
-    sparkArray :[0]
+    lastChangeBid: 0
   }
 }
 
@@ -54,11 +53,7 @@ exports.start = function(stompUrl) {
         data.lastChangeAsk = ask - data.bestAsk
         data.bestBid = bid
         data.bestAsk = ask
-        data.sparkArray.push(bid+ask /2)
-        // Send data for sparkLine
-        if (data.sparkArray.length > 10) {
-          data.sparkArray.shift();
-        }
+
         client.send("/fx/prices", { priority: 9 }, JSON.stringify(data))
       }
     }, 600)
@@ -66,4 +61,3 @@ exports.start = function(stompUrl) {
     util.log('Error starting Fake FX data service', arguments)
   })
 }
-

@@ -4,6 +4,25 @@
 // This array will store latest 20 bidupdates because data will keep on increasing
 // which may cause browser to freeze up
 let bidUpdatesData = [];
+let sparkLineArray = [];
+
+// create 12 arrays for currencies sparkLine
+for (var i = 0; i <12; i++) {
+  sparkLineArray[i] = [];
+}
+
+let counter = 0;
+
+setInterval(function() {
+  counter += 1;
+
+  if (counter > 6) {
+    // for (var i = 0; i < bidUpdatesData.length; i++) {
+    //   let sparksSpan = document.getElementById('streamSpan' + i);
+    //   Sparkline.draw(sparksSpan, sparkLineArray[i]);
+    // }
+  }
+},1000);
 
 function bidPriceUpdate() {
 
@@ -15,11 +34,20 @@ function bidPriceUpdate() {
 
     let parsedPrice = JSON.parse(priceResult.body);
 
+    parsedPrice.sparkArray = [];
+
+    // calculate midprice
+    let midPrice = (parsedPrice.bestAsk + parsedPrice.bestBid) /2;
+
     // get the index number of object in array
     let indexNumber = isElementPresent(parsedPrice.name);
 
     // if element is already present in the array
     if (indexNumber >= 0) {
+      sparkLineArray[indexNumber].push(midPrice);
+
+      parsedPrice.sparkArray = sparkLineArray[indexNumber];
+
       bidUpdatesData[indexNumber] = parsedPrice;
     }
     // if element is not present in the array then push it into array
@@ -68,10 +96,17 @@ function bidPriceUpdate() {
        tablecontents += "</table>";
        document.getElementById("bidUpdates").innerHTML = tablecontents;
 
-       for (var i = 0; i < bidUpdatesData.length; i++) {
-         let sparksSpan = document.getElementById('streamSpan' + i);
-         Sparkline.draw(sparksSpan, bidUpdatesData[i].sparkArray);
+       if (counter > 6 ) {
+           for (var i = 0; i < bidUpdatesData.length; i++) {
+             let sparksSpan = document.getElementById('streamSpan' + i);
+             Sparkline.draw(sparksSpan, sparkLineArray[i]);
+         }
        }
+
+       // for (var i = 0; i < bidUpdatesData.length; i++) {
+       //   let sparksSpan = document.getElementById('streamSpan' + i);
+       //   Sparkline.draw(sparksSpan, bidUpdatesData[i].sparkArray);
+       // }
   }
 
   /**
