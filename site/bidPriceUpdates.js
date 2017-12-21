@@ -1,21 +1,12 @@
 "use strict"
-
 // There will be continuos data for bidUpdates
 // This array will store latest 20 bidupdates because data will keep on increasing
 // which may cause browser to freeze up
+
 let bidUpdatesData = [];
 let sparkLineArray = [];
-var sparkLineCountArray = [];
+let sparkLineCountArray = [];
 let startSparkLine = false;
-
-// create 12 arrays for currencies sparkLine
-for (var i = 0; i <12; i++) {
-  // sparkLineArray[i] = [new Date().getTime()];
-
-  sparkLineArray[i] = [];
-  sparkLineCountArray[i] = [];
-}
-
 let counter = 0;
 
 setInterval(function() {
@@ -24,15 +15,26 @@ setInterval(function() {
 
 },10000);
 
-//update sparkline data for 30 sec
+// create 12 arrays for currencies sparkLine and sparkLineCountArray
+function createEmptyArray() {
+  for (var i = 0; i <12; i++) {
+
+    sparkLineArray[i] = [];
+    sparkLineCountArray[i] = [];
+  }
+}
+
+// update sparkline data for 30 sec
 function updateSparkData() {
 
   for (var i = 0; i < bidUpdatesData.length; i++) {
     var sparkLength = sparkLineArray[i].length;
     var totalSparkValues = 0, sparkValueToAdd = 0;
 
-    if(sparkLineCountArray[i].length > 1){
-          for(var j = 0; j < sparkLineCountArray[i].length; j++){
+    let sparkLineCountArrayLength =  sparkLineCountArray[i].length;
+
+    if(sparkLineCountArrayLength >= 1){
+          for(var j = 0; j < sparkLineCountArrayLength; j++){
           totalSparkValues = totalSparkValues + sparkLineCountArray[i][j];
           sparkValueToAdd = sparkLength - totalSparkValues;
           }
@@ -43,21 +45,23 @@ function updateSparkData() {
   }
 
   if(counter >= 3){
-    // startSparkLine = true;
-drawSparkLine(sparkLineCountArray);
+    startSparkLine = true;
+    drawSparkLine(sparkLineCountArray);
   }
 
 }
 
 function drawSparkLine(sparkLineCountArray) {
   for (var i = 0; i < bidUpdatesData.length; i++) {
-    //sparkLineArray[i].splice(0, sparkLineCountArray[i][0]);
+    sparkLineArray[i].splice(0, sparkLineCountArray[i][0]);
+    sparkLineCountArray[i].splice(0,1);
     let sparksSpan = document.getElementById('streamSpan' + i);
     Sparkline.draw(sparksSpan, sparkLineArray[i]);
   }
 }
 
 function bidPriceUpdate() {
+  createEmptyArray();
 
   /**
    * Add Price data in Table
@@ -132,30 +136,13 @@ function bidPriceUpdate() {
        }
        tablecontents += "</table>";
        document.getElementById("bidUpdates").innerHTML = tablecontents;
-       //
-       // if (startSparkLine) {
-       //   drawSparkLine();
-       // }
 
-       // if (counter > 6 ) {
-       //     for (var i = 0; i < bidUpdatesData.length; i++) {
-       //       let sparksSpan = document.getElementById('streamSpan' + i);
-       //       let createdTimeStampSparkLine = sparkLineArray[i] [0];
-       //       let currentTime = new Date().getTime();
-       //       let differenceinSeconds = (currentTime - createdTimeStampSparkLine) /1000;
-       //
-       //       if (differenceinSeconds >= 30) {
-       //         sparkLineArray[i].splice(0,4);
-       //         sparkLineArray[i] [0] = new Date().getTime();
-       //       }
-       //       Sparkline.draw(sparksSpan, sparkLineArray[i].slice(1));
-         // }
-       //}
-
-       // for (var i = 0; i < bidUpdatesData.length; i++) {
-       //   let sparksSpan = document.getElementById('streamSpan' + i);
-       //   Sparkline.draw(sparksSpan, bidUpdatesData[i].sparkArray);
-       // }
+       if (startSparkLine) {
+         for (var i = 0; i < bidUpdatesData.length; i++) {
+           let sparksSpan = document.getElementById('streamSpan' + i);
+           Sparkline.draw(sparksSpan, bidUpdatesData[i].sparkArray);
+         }
+       }
   }
 
   /**
