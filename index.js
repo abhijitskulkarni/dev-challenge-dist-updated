@@ -21,9 +21,9 @@ client.debug = function(msg) {
 }
 
 function connectCallback() {
-  document.getElementById('stomp-status').innerHTML = "It has now successfully connected to a stomp server serving price updates for some foreign exchange currency pairs."
+    document.getElementById('stomp-status').innerHTML = "It has now successfully connected to a stomp server serving price updates for some foreign exchange currency pairs."
 }
 
 client.connect({}, connectCallback, function(error) {
-  alert(error.headers.message)
+  document.getElementById('stomp-status').innerHTML = "Whoops! Lost connection to a stomp server";
 })

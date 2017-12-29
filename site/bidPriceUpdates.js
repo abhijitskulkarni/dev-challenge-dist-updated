@@ -136,7 +136,7 @@ function bidPriceUpdate() {
        }
          tablecontents += "</table>";
          document.getElementById("bidUpdates").innerHTML = tablecontents;
-      
+         
        // update sparkline data
        if (startSparkLine) {
          for (var i = 0; i < bidUpdatesData.length; i++) {
