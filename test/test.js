@@ -59,7 +59,7 @@ describe('Verify Sorting', function() {
       "lastChangeBid": 7.8769211401569663
     }];
 
-    arrayToSorted.sort(app._test.sortBestBidPrice);
+    arrayToSorted.sort(app.sortBestBidPrice);
     assert.equal(JSON.stringify(arrayToSorted), JSON.stringify(arrayManuallySorted));
   });
 

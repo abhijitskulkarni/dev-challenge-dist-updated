@@ -1,7 +1,6 @@
 "use strict"
 // There will be continuos data for bidUpdates
-// This array will store latest 20 bidupdates because data will keep on increasing
-// which may cause browser to freeze up
+// bidUpdatesData array will store bidupdates data.
 
 let bidUpdatesData = [];
 let sparkLineArray = [];
@@ -9,6 +8,7 @@ let sparkLineCountArray = [];
 let startSparkLine = false;
 let counter = 0;
 
+// update sparkLine array to display last 30 seconds data
 setInterval(function() {
   counter += 1;
   updateSparkData();
@@ -24,7 +24,7 @@ function createEmptyArray() {
   }
 }
 
-// update sparkline data for 30 sec
+// update sparkline data 
 function updateSparkData() {
 
   for (var i = 0; i < bidUpdatesData.length; i++) {
@@ -34,24 +34,24 @@ function updateSparkData() {
     let sparkLineCountArrayLength =  sparkLineCountArray[i].length;
 
     if(sparkLineCountArrayLength >= 1){
-          for(var j = 0; j < sparkLineCountArrayLength; j++){
-          totalSparkValues = totalSparkValues + sparkLineCountArray[i][j];
-          sparkValueToAdd = sparkLength - totalSparkValues;
-          }
-    } else {
-      sparkValueToAdd = sparkLength;
+      for(var j = 0; j < sparkLineCountArrayLength; j++){
+        totalSparkValues = totalSparkValues + sparkLineCountArray[i][j];
+        sparkValueToAdd = sparkLength - totalSparkValues;
+      }
+    }else {
+       sparkValueToAdd = sparkLength;
     }
-    sparkLineCountArray[i].push(sparkValueToAdd);
+      sparkLineCountArray[i].push(sparkValueToAdd);
   }
 
   if(counter >= 3){
     startSparkLine = true;
-    drawSparkLine(sparkLineCountArray);
+    drawSparkLine();
   }
 
 }
 
-function drawSparkLine(sparkLineCountArray) {
+function drawSparkLine() {
   for (var i = 0; i < bidUpdatesData.length; i++) {
     sparkLineArray[i].splice(0, sparkLineCountArray[i][0]);
     sparkLineCountArray[i].splice(0,1);
@@ -64,22 +64,22 @@ function bidPriceUpdate() {
   createEmptyArray();
 
   /**
-   * Add Price data in Table
+   * Add birPrice Update data in Table
    * @param {Object}  priceResult
-   */
+   **/
   this.addValuesToTable = function(priceResult) {
 
     let parsedPrice = JSON.parse(priceResult.body);
 
     parsedPrice.sparkArray = [];
 
-    // calculate midprice
+    // Calculate midprice
     let midPrice = (parsedPrice.bestAsk + parsedPrice.bestBid) /2;
 
-    // get the index number of object in array
+    // Get the index number of object in array
     let indexNumber = isElementPresent(parsedPrice.name);
 
-    // if element is already present in the array
+    // If element is already present in the array
     if (indexNumber >= 0) {
       sparkLineArray[indexNumber].push(midPrice);
 
@@ -120,7 +120,7 @@ function bidPriceUpdate() {
        {
          const sparksSpan = document.createElement('span');
 
-          tablecontents += `
+         tablecontents += `
           <tr>
             <td>${bidUpdatesData[i].name}</td>
             <td>${bidUpdatesData[i].bestBid.toFixed(3)}</td>
@@ -134,9 +134,10 @@ function bidPriceUpdate() {
             </td>
           </tr>`;
        }
-       tablecontents += "</table>";
-       document.getElementById("bidUpdates").innerHTML = tablecontents;
-
+         tablecontents += "</table>";
+         document.getElementById("bidUpdates").innerHTML = tablecontents;
+      
+       // update sparkline data
        if (startSparkLine) {
          for (var i = 0; i < bidUpdatesData.length; i++) {
            let sparksSpan = document.getElementById('streamSpan' + i);
@@ -179,9 +180,10 @@ function isElementPresent(name) {
 
   return Index;
 }
-// This is required for unit test.
-exports._test = {
-  sortBestBidPrice: sortBestBidPrice
+
+
+module.exports = {
+  bidPriceUpdate:bidPriceUpdate,
+  sortBestBidPrice:sortBestBidPrice
 }
 
-module.exports = bidPriceUpdate;

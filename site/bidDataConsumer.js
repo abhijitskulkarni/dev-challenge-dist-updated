@@ -10,7 +10,7 @@ topics = "/fx/prices";
 let client = Stomp.client(urlServer);
 client.connect("", "", connectCallBack, errorCallback);
 
-let bidPriceUpdateObject = new bidPriceUpdate();
+let bidPriceUpdateObject = new bidPriceUpdate.bidPriceUpdate();
 
 // This will be called back when connection will be established
 function connectCallBack(data) {
