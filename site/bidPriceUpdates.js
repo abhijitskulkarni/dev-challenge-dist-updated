@@ -17,7 +17,7 @@ setInterval(function() {
 
 // create 12 arrays for currencies sparkLine and sparkLineCountArray
 function createEmptyArray() {
-  for (var i = 0; i <12; i++) {
+  for (let i = 0; i <12; i++) {
 
     sparkLineArray[i] = [];
     sparkLineCountArray[i] = [];
@@ -27,14 +27,14 @@ function createEmptyArray() {
 // update sparkline data
 function updateSparkData() {
 
-  for (var i = 0; i < bidUpdatesData.length; i++) {
-    var sparkLength = sparkLineArray[i].length;
-    var totalSparkValues = 0, sparkValueToAdd = 0;
+  for (let i = 0; i < bidUpdatesData.length; i++) {
+    let sparkLength = sparkLineArray[i].length;
+    let totalSparkValues = 0, sparkValueToAdd = 0;
 
     let sparkLineCountArrayLength =  sparkLineCountArray[i].length;
 
     if(sparkLineCountArrayLength >= 1){
-      for(var j = 0; j < sparkLineCountArrayLength; j++){
+      for(let j = 0; j < sparkLineCountArrayLength; j++){
         totalSparkValues = totalSparkValues + sparkLineCountArray[i][j];
         sparkValueToAdd = sparkLength - totalSparkValues;
       }
@@ -52,7 +52,7 @@ function updateSparkData() {
 }
 
 function drawSparkLine() {
-  for (var i = 0; i < bidUpdatesData.length; i++) {
+  for (let i = 0; i < bidUpdatesData.length; i++) {
     sparkLineArray[i].splice(0, sparkLineCountArray[i][0]);
     sparkLineCountArray[i].splice(0,1);
     let sparksSpan = document.getElementById('streamSpan' + i);
@@ -101,7 +101,7 @@ function drawSparkLine() {
 
     // Render all the bidUpdates in table
 
-      var tablecontents = "";
+      let tablecontents = "";
       tablecontents = "<table>";
 
       tablecontents += `<tr>
@@ -115,7 +115,7 @@ function drawSparkLine() {
             <th>SparkLine</th>
         </tr>`;
 
-      for (var i = 0; i < bidUpdatesData.length; i ++)
+      for (let i = 0; i < bidUpdatesData.length; i ++)
        {
          const sparksSpan = document.createElement('span');
 
@@ -138,7 +138,7 @@ function drawSparkLine() {
 
        // update sparkline data
        if (startSparkLine) {
-         for (var i = 0; i < bidUpdatesData.length; i++) {
+         for (let i = 0; i < bidUpdatesData.length; i++) {
            let sparksSpan = document.getElementById('streamSpan' + i);
            Sparkline.draw(sparksSpan, bidUpdatesData[i].sparkArray);
          }
@@ -151,7 +151,6 @@ function drawSparkLine() {
   exports.shutDownServer = function() {
     document.getElementById("myonoffswitch").checked = false;
   }
-
 
 /**
  * Sort array of bidprice updates.

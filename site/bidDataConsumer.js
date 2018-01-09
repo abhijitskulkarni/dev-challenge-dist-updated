@@ -1,12 +1,10 @@
-"use strict"
+"use strict";
 
-let bidPriceUpdate = require('./bidPriceUpdates.js');
+const bidPriceUpdate = require('./bidPriceUpdates.js');
 //url of stomp server
-let urlServer;
-let topics;
-urlServer = "ws://localhost:8011/stomp";
-topics = "/fx/prices";
-let client = Stomp.client(urlServer);
+const urlServer = "ws://localhost:8011/stomp";
+const topics = "/fx/prices";
+const client = Stomp.client(urlServer);
 client.connect("", "", connectCallBack, errorCallback);
 
 // This will be called back when connection will be established
@@ -21,6 +19,7 @@ function errorCallback(error) {
   // Change status of stomp server
   bidPriceUpdate.shutDownServer();
 }
+
 // This will get the data and will pass this to addValuesToTable where it will render data
 function messageCallback(priceResult) {
   // validate data received from priceResult
