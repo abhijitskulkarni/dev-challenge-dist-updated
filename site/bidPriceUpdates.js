@@ -24,7 +24,7 @@ function createEmptyArray() {
   }
 }
 
-// update sparkline data 
+// update sparkline data
 function updateSparkData() {
 
   for (var i = 0; i < bidUpdatesData.length; i++) {
@@ -60,14 +60,13 @@ function drawSparkLine() {
   }
 }
 
-function bidPriceUpdate() {
   createEmptyArray();
 
   /**
    * Add birPrice Update data in Table
    * @param {Object}  priceResult
    **/
-  this.addValuesToTable = function(priceResult) {
+  exports.addValuesToTable = function(priceResult) {
 
     let parsedPrice = JSON.parse(priceResult.body);
 
@@ -136,7 +135,7 @@ function bidPriceUpdate() {
        }
          tablecontents += "</table>";
          document.getElementById("bidUpdates").innerHTML = tablecontents;
-         
+
        // update sparkline data
        if (startSparkLine) {
          for (var i = 0; i < bidUpdatesData.length; i++) {
@@ -149,19 +148,21 @@ function bidPriceUpdate() {
   /**
    * Change status of stomp server
    */
-  this.shutDownServer = function() {
+  exports.shutDownServer = function() {
     document.getElementById("myonoffswitch").checked = false;
   }
-}
+
 
 /**
  * Sort array of bidprice updates.
  * @param {Object}  bidPriceArray
  * @return {Object} Sorted array will be returned
  */
-function sortBestBidPrice(a, b) {
+ function sortBestBidPrice (a, b) {
   return a.lastChangeBid - b.lastChangeBid;
 }
+// export sortBestBidPrice
+exports.sortBestBidPrice = sortBestBidPrice;
 
 /**
  * Check if element exists in the Array
@@ -180,10 +181,3 @@ function isElementPresent(name) {
 
   return Index;
 }
-
-
-module.exports = {
-  bidPriceUpdate:bidPriceUpdate,
-  sortBestBidPrice:sortBestBidPrice
-}
-
