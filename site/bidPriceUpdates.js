@@ -12,17 +12,7 @@ let counter = 0;
 setInterval(function() {
   counter += 1;
   updateSparkData();
-
 },10000);
-
-// create 12 arrays for currencies sparkLine and sparkLineCountArray
-function createEmptyArray() {
-  for (let i = 0; i <12; i++) {
-
-    sparkLineArray[i] = [];
-    sparkLineCountArray[i] = [];
-  }
-}
 
 // update sparkline data
 function updateSparkData() {
@@ -60,8 +50,6 @@ function drawSparkLine() {
   }
 }
 
-  createEmptyArray();
-
   /**
    * Add birPrice Update data in Table
    * @param {Object}  priceResult
@@ -88,9 +76,14 @@ function drawSparkLine() {
     }
     // if element is not present in the array then push it into array
     else {
+      // create sparkLineArray for currency
+      sparkLineArray[bidUpdatesData.length] = [];
       sparkLineArray[bidUpdatesData.length].push(midPrice);
 
       parsedPrice.sparkArray = sparkLineArray[bidUpdatesData.length];
+
+      // create sparkLineCountArray for currency
+      sparkLineCountArray[bidUpdatesData.length] = [];
 
       bidUpdatesData.push(parsedPrice);
     }
