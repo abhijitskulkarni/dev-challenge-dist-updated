@@ -1,4 +1,5 @@
-"use strict"
+'use strict';
+
 // There will be continuos data for bidUpdates
 // bidUpdatesData array will store bidupdates data.
 
@@ -9,32 +10,34 @@ let startSparkLine = false;
 let counter = 0;
 
 // update sparkLine array to display last 30 seconds data
-setInterval(function() {
+setInterval(function () {
   counter += 1;
   updateSparkData();
-},10000);
+}, 10000);
 
 // update sparkline data
 function updateSparkData() {
 
   for (let i = 0; i < bidUpdatesData.length; i++) {
     let sparkLength = sparkLineArray[i].length;
-    let totalSparkValues = 0, sparkValueToAdd = 0;
+    let totalSparkValues = 0;
+    let sparkValueToAdd = 0;
 
     let sparkLineCountArrayLength =  sparkLineCountArray[i].length;
 
-    if(sparkLineCountArrayLength >= 1){
-      for(let j = 0; j < sparkLineCountArrayLength; j++){
+    if (sparkLineCountArrayLength >= 1) {
+      for (let j = 0; j < sparkLineCountArrayLength; j++) {
         totalSparkValues = totalSparkValues + sparkLineCountArray[i][j];
         sparkValueToAdd = sparkLength - totalSparkValues;
       }
     }else {
-       sparkValueToAdd = sparkLength;
+      sparkValueToAdd = sparkLength;
     }
-      sparkLineCountArray[i].push(sparkValueToAdd);
+
+    sparkLineCountArray[i].push(sparkValueToAdd);
   }
 
-  if(counter >= 3){
+  if (counter >= 3) {
     startSparkLine = true;
     drawSparkLine();
   }
@@ -44,24 +47,25 @@ function updateSparkData() {
 function drawSparkLine() {
   for (let i = 0; i < bidUpdatesData.length; i++) {
     sparkLineArray[i].splice(0, sparkLineCountArray[i][0]);
-    sparkLineCountArray[i].splice(0,1);
+    sparkLineCountArray[i].splice(0, 1);
     let sparksSpan = document.getElementById('streamSpan' + i);
     Sparkline.draw(sparksSpan, sparkLineArray[i]);
   }
 }
 
-  /**
+/**
    * Add birPrice Update data in Table
    * @param {Object}  priceResult
    **/
-  exports.addValuesToTable = function(priceResult) {
+
+exports.addValuesToTable = function (priceResult) {
 
     let parsedPrice = JSON.parse(priceResult.body);
 
     parsedPrice.sparkArray = [];
 
     // Calculate midprice
-    let midPrice = (parsedPrice.bestAsk + parsedPrice.bestBid) /2;
+    let midPrice = (parsedPrice.bestAsk + parsedPrice.bestBid) / 2;
 
     // Get the index number of object in array
     let indexNumber = isElementPresent(parsedPrice.name);
@@ -74,6 +78,7 @@ function drawSparkLine() {
 
       bidUpdatesData[indexNumber] = parsedPrice;
     }
+
     // if element is not present in the array then push it into array
     else {
       // create sparkLineArray for currency
@@ -94,10 +99,10 @@ function drawSparkLine() {
 
     // Render all the bidUpdates in table
 
-      let tablecontents = "";
-      tablecontents = "<table>";
+    let tablecontents = '';
+    tablecontents = '<table>';
 
-      tablecontents += `<tr>
+    tablecontents += `<tr>
             <th>Name</th>
             <th>BestBid</th>
             <th>BestAsk</th>
@@ -108,11 +113,11 @@ function drawSparkLine() {
             <th>SparkLine</th>
         </tr>`;
 
-      for (let i = 0; i < bidUpdatesData.length; i ++)
-       {
-         const sparksSpan = document.createElement('span');
+    for (let i = 0; i < bidUpdatesData.length; i++)
+    {
+      const sparksSpan = document.createElement('span');
 
-         tablecontents += `
+      tablecontents += `
           <tr>
             <td>${bidUpdatesData[i].name}</td>
             <td>${bidUpdatesData[i].bestBid.toFixed(3)}</td>
@@ -125,34 +130,37 @@ function drawSparkLine() {
               <span id='streamSpan${i}'></span>
             </td>
           </tr>`;
-       }
-         tablecontents += "</table>";
-         document.getElementById("bidUpdates").innerHTML = tablecontents;
+    }
 
-       // update sparkline data
-       if (startSparkLine) {
-         for (let i = 0; i < bidUpdatesData.length; i++) {
-           let sparksSpan = document.getElementById('streamSpan' + i);
-           Sparkline.draw(sparksSpan, bidUpdatesData[i].sparkArray);
-         }
-       }
-  }
+    tablecontents += '</table>';
+    document.getElementById('bidUpdates').innerHTML = tablecontents;
 
-  /**
+    // update sparkline data
+    if (startSparkLine)
+    {
+      for (let i = 0; i < bidUpdatesData.length; i++) {
+        let sparksSpan = document.getElementById('streamSpan' + i);
+        Sparkline.draw(sparksSpan, bidUpdatesData[i].sparkArray);
+      }
+    }
+  };
+
+/**
    * Change status of stomp server
    */
-  exports.shutDownServer = function() {
-    document.getElementById("myonoffswitch").checked = false;
-  }
+exports.shutDownServer = function () {
+    document.getElementById('myonoffswitch').checked = false;
+  };
 
 /**
  * Sort array of bidprice updates.
  * @param {Object}  bidPriceArray
  * @return {Object} Sorted array will be returned
  */
- function sortBestBidPrice (a, b) {
+function sortBestBidPrice(a, b) {
   return a.lastChangeBid - b.lastChangeBid;
 }
+
 // export sortBestBidPrice
 exports.sortBestBidPrice = sortBestBidPrice;
 
